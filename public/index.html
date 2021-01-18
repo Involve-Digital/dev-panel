@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+
+  </head>
+<body>
+<script>
+  var loadDevPanelData = function () {
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://incolor-cms/utils/development/obtain-dev-panel-data', false);
+    request.onload = function () {
+      window.devPanel = JSON.parse(this.response);
+    };
+    request.send();
+  };
+
+  window.saveDevPanelData = function () {
+    var request = new XMLHttpRequest();
+    request.open('POST', 'http://incolor-cms/utils/development/save-dev-panel-data', true);
+    request.send(JSON.stringify(window.devPanel));
+  };
+
+  loadDevPanelData();
+</script>
+
+<div style="margin-left: 350px;">
+    <form>
+        <input type="text" name="text1"><br/>
+        <input type="password" name="password1"><br/>
+        <input type="email" name="email1"><br/>
+        <input type="tel" name="tel1"><br/>
+
+        <input type="checkbox" name="checkbox1" value="agree">
+        <input type="checkbox" name="checkbox1" value="disagree"><br/>
+
+        <input type="radio" name="radio1" value="male">
+        <input type="radio" name="radio1" value="female"><br/>
+
+        <select name="select1">
+            <option value="option1">Val 1</option>
+            <option value="option2">Val 2</option>
+        </select><br>
+
+        <textarea name="textarea1"></textarea><br>
+
+        <input type="submit">
+    </form>
+</div>
+
+<div id="dev-panel"></div>
+</body>
+</html>
