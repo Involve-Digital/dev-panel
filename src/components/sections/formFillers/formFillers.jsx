@@ -158,8 +158,47 @@ class FormFillers extends Section {
       let elements = document.getElementsByName(formFiller.values[i].name);
       let valueToFill = formFiller.values[i].value;
 
-      if (valueToFill && valueToFill.includes('(rand)')) {
-        valueToFill = valueToFill.replace('(rand)', Math.floor(Math.random() * 10000));
+      // (rand[1-100])
+      // (rand[Franta,Pepa,Vladimír])
+
+      if (valueToFill && valueToFill.includes('(rand')) {
+        let start = valueToFill.indexOf('(rand');
+        let count = (valueToFill.match(/\(rand/g) || []).length;
+
+        let newValueToFill = valueToFill;
+
+        for (let i = 1; i <= count; i++) {
+          let start = valueToFill.indexOf('(rand', start);
+          let end = valueToFill.indexOf('])', start) + 2;
+
+          let randVar = valueToFill.substring(start, end);
+          let randVarValue = valueToFill.substring(start + 6, end - 2);
+
+          if (randVarValue.includes(',')) {
+            randVarValue = randVarValue.split(',');
+
+            let min = 0;
+            let max = randVarValue.length - 1;
+
+            let randIndex = Math.round(Math.random() * (max - min) + min);
+            let randItem = randVarValue[randIndex];
+
+            newValueToFill = newValueToFill.replace(randVar, randItem);
+          } else if (randVarValue.includes('-')) {
+            randVarValue = randVarValue.split('-');
+
+            let min = parseInt(randVarValue[0]);
+            let max = parseInt(randVarValue[randVarValue.length - 1]);
+
+            let randNumber = Math.ceil(Math.random() * (max - min) + min);
+
+            newValueToFill = newValueToFill.replace(randVar, randNumber);
+          }
+
+          start = valueToFill.indexOf('(rand', end);
+        }
+
+        valueToFill = newValueToFill;
       }
 
       for (let i2 = 0; i2 < elements.length; i2++) {
@@ -415,8 +454,18 @@ class FormFillers extends Section {
                   <hr className="iv-hr"/>
 
                   <div>
-                    TIP: You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow, or all inputs of form via button above. Name and value will be filled automatically from page.
+                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                    You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow, or all inputs of form via button above. Name and value will be filled automatically from page.
                     <Tooltip text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
+                  </div>
+
+                  <hr className="iv-hr"/>
+
+                  <div>
+                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                      For random number you can use variable <strong>(rand[min-max])</strong>
+                      <br />
+                      For random string you can use variable <strong>(rand[str1,str2,...])</strong>
                   </div>
 
                   <hr className="iv-hr"/>
