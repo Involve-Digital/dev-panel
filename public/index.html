@@ -7,7 +7,7 @@
 <script>
   var loadDevPanelData = function () {
     var request = new XMLHttpRequest();
-    request.open('GET', 'http://incolor-cms/utils/development/obtain-dev-panel-data', false);
+    request.open('GET', 'http://involve-cms/utils/development/obtain-dev-panel-data', false);
     request.onload = function () {
       window.devPanel = JSON.parse(this.response);
     };
@@ -16,7 +16,7 @@
 
   window.saveDevPanelData = function () {
     var request = new XMLHttpRequest();
-    request.open('POST', 'http://incolor-cms/utils/development/save-dev-panel-data', true);
+    request.open('POST', 'http://involve-cms/utils/development/save-dev-panel-data', true);
     request.send(JSON.stringify(window.devPanel));
   };
 

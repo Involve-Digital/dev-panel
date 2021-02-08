@@ -27,9 +27,15 @@ class Help extends Section {
 
         <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
           <p>
-            For random number between 1-10000 in formfillers
-            you can use variable <strong>(rand)</strong>.
-            <br/>e.g: <u>customer(rand)@test.cz</u>
+            For random number you can use variable <strong>(rand[min-max])</strong>,
+            which will be replaced with random number from <i>min</i> to <i>max</i>.
+            <br/>e.g: <u>customer(rand[1000-2000])@test.cz</u>
+          </p>
+
+          <p>
+            For random string you can use variable <strong>(rand[str1,str2,...])</strong>,
+            which will be replaced with random value from given set.
+            <br/>e.g: <u>(rand[John,David,Mark])</u>
           </p>
 
           <hr className="iv-hr"/>

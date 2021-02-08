@@ -46,9 +46,8 @@ class FormFillers extends Section {
 
     if (e.code === 'KeyF') {
       for (let i = 0; i < formFillers.length; i++) {
-        if (formFillers[i].default) {
+        if (formFillers[i].quickFill) {
           this.useFormFiller(formFillers[i]);
-          return;
         }
       }
     }
@@ -87,14 +86,10 @@ class FormFillers extends Section {
     });
   }
 
-  saveDefault(index, value) {
+  saveQuickFill(index, value) {
     const formFillers = this.state.formFillers;
 
-    for (let i = 0; i < formFillers.length; i++) {
-      formFillers[i].default = false;
-    }
-
-    formFillers[index].default = value;
+    formFillers[index].quickFill = value;
 
     this.setState({
       formFillers: formFillers
@@ -148,6 +143,10 @@ class FormFillers extends Section {
       }
     });
 
+    for (var i = 0; i < this.state.formFillers.length; i++) {
+      this.state.formFillers[i].values = this.state.formFillers[i].values.filter(value => value);
+    }
+
     window.devPanel.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
     window.saveDevPanelData();
 
@@ -159,8 +158,47 @@ class FormFillers extends Section {
       let elements = document.getElementsByName(formFiller.values[i].name);
       let valueToFill = formFiller.values[i].value;
 
-      if (valueToFill && valueToFill.includes('(rand)')) {
-        valueToFill = valueToFill.replace('(rand)', Math.floor(Math.random() * 10000));
+      // (rand[1-100])
+      // (rand[Franta,Pepa,Vladimír])
+
+      if (valueToFill && valueToFill.includes('(rand')) {
+        let start = valueToFill.indexOf('(rand');
+        let count = (valueToFill.match(/\(rand/g) || []).length;
+
+        let newValueToFill = valueToFill;
+
+        for (let i = 1; i <= count; i++) {
+          let start = valueToFill.indexOf('(rand', start);
+          let end = valueToFill.indexOf('])', start) + 2;
+
+          let randVar = valueToFill.substring(start, end);
+          let randVarValue = valueToFill.substring(start + 6, end - 2);
+
+          if (randVarValue.includes(',')) {
+            randVarValue = randVarValue.split(',');
+
+            let min = 0;
+            let max = randVarValue.length - 1;
+
+            let randIndex = Math.round(Math.random() * (max - min) + min);
+            let randItem = randVarValue[randIndex];
+
+            newValueToFill = newValueToFill.replace(randVar, randItem);
+          } else if (randVarValue.includes('-')) {
+            randVarValue = randVarValue.split('-');
+
+            let min = parseInt(randVarValue[0]);
+            let max = parseInt(randVarValue[randVarValue.length - 1]);
+
+            let randNumber = Math.ceil(Math.random() * (max - min) + min);
+
+            newValueToFill = newValueToFill.replace(randVar, randNumber);
+          }
+
+          start = valueToFill.indexOf('(rand', end);
+        }
+
+        valueToFill = newValueToFill;
       }
 
       for (let i2 = 0; i2 < elements.length; i2++) {
@@ -210,17 +248,41 @@ class FormFillers extends Section {
     });
   }
 
-  handlePick(formFillerIndex, index) {
+  handlePick(formFillerIndex, index, wholeForm) {
+    var message = 'Now pick the desired input.';
+    var duration = 2000;
+
+    if (wholeForm === true) {
+      message = 'Now pick the input in desired form and all other inputs in same form will be picked as well.';
+      duration = 5000;
+    }
+
+    store.addNotification({
+      title: "dev-panel",
+      message: message,
+      type: "info",
+      insert: "top",
+      container: "bottom-left",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeIn"],
+      dismiss: {
+        duration: duration,
+        onScreen: true
+      }
+    });
+
     const toggleDevPanel = this.props.toggle;
     const toggleModal = this.toggleModal;
 
     const values = this.state.formFillers[formFillerIndex].values;
 
-    for (let i = 0; i < values.length; i++) {
-      const inputs = document.querySelectorAll('[name="' + values[i].name + '"]');
+    if (wholeForm !== true) {
+      for (let i = 0; i < values.length; i++) {
+        const inputs = document.querySelectorAll('[name="' + values[i].name + '"]');
 
-      for (let i2 = 0; i2 < inputs.length; i2++) {
-        inputs[i2].classList.add('dev-panel-picked');
+        for (let i2 = 0; i2 < inputs.length; i2++) {
+          inputs[i2].classList.add('dev-panel-picked');
+        }
       }
     }
 
@@ -239,6 +301,22 @@ class FormFillers extends Section {
       if (typeof index !== 'undefined') {
         values[index].name = e.target.getAttribute('name');
         values[index].value = e.target.value;
+      } else if (wholeForm === true) {
+        let formElements = e.target.form.elements;
+
+        values.length = 0;
+
+        for (var i = 0; i < formElements.length; i++) {
+          let type = formElements[i].getAttribute('type');
+
+          if ((type === 'checkbox' || type === 'radio') && !formElements[i].checked) {
+            continue;
+          }
+
+          values[i] = {};
+          values[i].name = formElements[i].getAttribute('name');
+          values[i].value = formElements[i].value;
+        }
       } else {
         addRow(formFillerIndex);
 
@@ -249,11 +327,13 @@ class FormFillers extends Section {
       toggleDevPanel();
       toggleModal();
 
-      if (typeof index === 'undefined') {
-        index = values.length - 1;
-      }
+      if (wholeForm !== true) {
+        if (typeof index === 'undefined') {
+          index = values.length - 1;
+        }
 
-      document.getElementById('ffv-' + formFillerIndex + '-' + index).focus();
+        document.getElementById('ffv-' + formFillerIndex + '-' + index).focus();
+      }
     }, {once: true});
   }
 
@@ -326,10 +406,13 @@ class FormFillers extends Section {
                           <Tooltip text="Name of formfiller; is displayed in dev-panel"/>
                         </th>
                         <th>
-                          Is default
+                          Quick fill
                           <Tooltip text='If checked, form filler will be used while using keyboard combo "shift + f"'/>
                         </th>
-                        <th className="iv-control">Action</th>
+                        <th className="iv-control">
+                          Action
+                          <Tooltip text='"Load entire form" button picks all inputs from form and adds them to form filler; "Delete" button deletes form filler'/>
+                        </th>
                       </tr>
                     </thead>
 
@@ -348,15 +431,20 @@ class FormFillers extends Section {
                           <input
                             className="iv-checkbox"
                             type="checkbox"
-                            onChange={(e) => this.saveDefault(index, e.target.checked)}
-                            checked={value.default}
+                            onChange={(e) => this.saveQuickFill(index, e.target.checked)}
+                            checked={value.quickFill ? value.quickFill : false}
                           />
                         </td>
 
                         <td className="iv-control">
+                          <button className="iv-button iv-button--success" onClick={() => this.handlePick(index, undefined, true)}>
+                            <FontAwesomeIcon icon={['fas', 'crosshairs']}/>
+                            Load entire form
+                          </button>
+
                           <button className="iv-button iv-button--alert" onClick={() => this.deleteFormFiller(index)}>
                             <FontAwesomeIcon icon={['fas', 'trash']}/>
-                            Delete form filler
+                            Delete
                           </button>
                         </td>
                       </tr>
@@ -366,8 +454,18 @@ class FormFillers extends Section {
                   <hr className="iv-hr"/>
 
                   <div>
-                    TIP: You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow. Name and value will be filled automatically.
+                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                    You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow, or all inputs of form via button above. Name and value will be filled automatically from page.
                     <Tooltip text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
+                  </div>
+
+                  <hr className="iv-hr"/>
+
+                  <div>
+                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                      For random number you can use variable <strong>(rand[min-max])</strong>
+                      <br />
+                      For random string you can use variable <strong>(rand[str1,str2,...])</strong>
                   </div>
 
                   <hr className="iv-hr"/>
