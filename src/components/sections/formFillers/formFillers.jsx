@@ -46,9 +46,8 @@ class FormFillers extends Section {
 
     if (e.code === 'KeyF') {
       for (let i = 0; i < formFillers.length; i++) {
-        if (formFillers[i].default) {
+        if (formFillers[i].quickFill) {
           this.useFormFiller(formFillers[i]);
-          return;
         }
       }
     }
@@ -87,14 +86,10 @@ class FormFillers extends Section {
     });
   }
 
-  saveDefault(index, value) {
+  saveQuickFill(index, value) {
     const formFillers = this.state.formFillers;
 
-    for (let i = 0; i < formFillers.length; i++) {
-      formFillers[i].default = false;
-    }
-
-    formFillers[index].default = value;
+    formFillers[index].quickFill = value;
 
     this.setState({
       formFillers: formFillers
@@ -326,7 +321,7 @@ class FormFillers extends Section {
                           <Tooltip text="Name of formfiller; is displayed in dev-panel"/>
                         </th>
                         <th>
-                          Is default
+                          Quick fill
                           <Tooltip text='If checked, form filler will be used while using keyboard combo "shift + f"'/>
                         </th>
                         <th className="iv-control">Action</th>
@@ -348,8 +343,8 @@ class FormFillers extends Section {
                           <input
                             className="iv-checkbox"
                             type="checkbox"
-                            onChange={(e) => this.saveDefault(index, e.target.checked)}
-                            checked={value.default}
+                            onChange={(e) => this.saveQuickFill(index, e.target.checked)}
+                            checked={value.quickFill ? value.quickFill : false}
                           />
                         </td>
 
