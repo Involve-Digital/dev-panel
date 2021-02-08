@@ -143,6 +143,10 @@ class FormFillers extends Section {
       }
     });
 
+    for (var i = 0; i < this.state.formFillers.length; i++) {
+      this.state.formFillers[i].values = this.state.formFillers[i].values.filter(value => value);
+    }
+
     window.devPanel.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
     window.saveDevPanelData();
 
@@ -205,17 +209,41 @@ class FormFillers extends Section {
     });
   }
 
-  handlePick(formFillerIndex, index) {
+  handlePick(formFillerIndex, index, wholeForm) {
+    var message = 'Now pick the desired input.';
+    var duration = 2000;
+
+    if (wholeForm === true) {
+      message = 'Now pick the input in desired form and all other inputs in same form will be picked as well.';
+      duration = 5000;
+    }
+
+    store.addNotification({
+      title: "dev-panel",
+      message: message,
+      type: "info",
+      insert: "top",
+      container: "bottom-left",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeIn"],
+      dismiss: {
+        duration: duration,
+        onScreen: true
+      }
+    });
+
     const toggleDevPanel = this.props.toggle;
     const toggleModal = this.toggleModal;
 
     const values = this.state.formFillers[formFillerIndex].values;
 
-    for (let i = 0; i < values.length; i++) {
-      const inputs = document.querySelectorAll('[name="' + values[i].name + '"]');
+    if (wholeForm !== true) {
+      for (let i = 0; i < values.length; i++) {
+        const inputs = document.querySelectorAll('[name="' + values[i].name + '"]');
 
-      for (let i2 = 0; i2 < inputs.length; i2++) {
-        inputs[i2].classList.add('dev-panel-picked');
+        for (let i2 = 0; i2 < inputs.length; i2++) {
+          inputs[i2].classList.add('dev-panel-picked');
+        }
       }
     }
 
@@ -234,6 +262,22 @@ class FormFillers extends Section {
       if (typeof index !== 'undefined') {
         values[index].name = e.target.getAttribute('name');
         values[index].value = e.target.value;
+      } else if (wholeForm === true) {
+        let formElements = e.target.form.elements;
+
+        values.length = 0;
+
+        for (var i = 0; i < formElements.length; i++) {
+          let type = formElements[i].getAttribute('type');
+
+          if ((type === 'checkbox' || type === 'radio') && !formElements[i].checked) {
+            continue;
+          }
+
+          values[i] = {};
+          values[i].name = formElements[i].getAttribute('name');
+          values[i].value = formElements[i].value;
+        }
       } else {
         addRow(formFillerIndex);
 
@@ -244,11 +288,13 @@ class FormFillers extends Section {
       toggleDevPanel();
       toggleModal();
 
-      if (typeof index === 'undefined') {
-        index = values.length - 1;
-      }
+      if (wholeForm !== true) {
+        if (typeof index === 'undefined') {
+          index = values.length - 1;
+        }
 
-      document.getElementById('ffv-' + formFillerIndex + '-' + index).focus();
+        document.getElementById('ffv-' + formFillerIndex + '-' + index).focus();
+      }
     }, {once: true});
   }
 
@@ -324,7 +370,10 @@ class FormFillers extends Section {
                           Quick fill
                           <Tooltip text='If checked, form filler will be used while using keyboard combo "shift + f"'/>
                         </th>
-                        <th className="iv-control">Action</th>
+                        <th className="iv-control">
+                          Action
+                          <Tooltip text='"Load entire form" button picks all inputs from form and adds them to form filler; "Delete" button deletes form filler'/>
+                        </th>
                       </tr>
                     </thead>
 
@@ -349,9 +398,14 @@ class FormFillers extends Section {
                         </td>
 
                         <td className="iv-control">
+                          <button className="iv-button iv-button--success" onClick={() => this.handlePick(index, undefined, true)}>
+                            <FontAwesomeIcon icon={['fas', 'crosshairs']}/>
+                            Load entire form
+                          </button>
+
                           <button className="iv-button iv-button--alert" onClick={() => this.deleteFormFiller(index)}>
                             <FontAwesomeIcon icon={['fas', 'trash']}/>
-                            Delete form filler
+                            Delete
                           </button>
                         </td>
                       </tr>
@@ -361,7 +415,7 @@ class FormFillers extends Section {
                   <hr className="iv-hr"/>
 
                   <div>
-                    TIP: You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow. Name and value will be filled automatically.
+                    TIP: You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow, or all inputs of form via button above. Name and value will be filled automatically from page.
                     <Tooltip text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
                   </div>
 
