@@ -465,7 +465,7 @@ class FormFillers extends Section {
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
                       For random number you can use variable <strong>(rand[min-max])</strong>
                       <br />
-                      For random string you can use variable <strong>(rand[str1,str2,...])</strong>
+                      For random value from set you can use variable <strong>(rand[val1,val2,...])</strong></strong>
                   </div>
 
                   <hr className="iv-hr"/>
