@@ -465,10 +465,10 @@ class FormFillers extends Section {
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
                       For random number you can use variable <strong>(rand[min-max])</strong>
                       <br />
-                      For random value from set you can use variable <strong>(rand[val1,val2,...])</strong></strong>
+                      For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>
                   </div>
 
-                  <hr className="iv-hr"/>
+                  <hr className="iv-hr" />
 
                   <table className="iv-table">
                     <thead>
