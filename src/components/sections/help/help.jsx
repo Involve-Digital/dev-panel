@@ -33,7 +33,7 @@ class Help extends Section {
           </p>
 
           <p>
-            For random string you can use variable <strong>(rand[str1,str2,...])</strong>,
+            For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>,
             which will be replaced with random value from given set.
             <br/>e.g: <u>(rand[John,David,Mark])</u>
           </p>

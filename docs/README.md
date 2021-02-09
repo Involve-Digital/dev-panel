@@ -38,9 +38,9 @@ You start by setting up values-to-be-used in config modal. This can be done by:
 
 When the form filler is saved and ready, new button in the section shows up.
 
-> <p>For random number you can use variable <strong>(rand[min-max])</strong>, which will be replaced with random number from <i>min</i> to <i>max</i>. <br/>e.g: <u>customer(rand[1000-2000])@test.cz</u></p>
+> For random number you can use variable <strong>(rand[min-max])</strong>, which will be replaced with random number from <i>min</i> to <i>max</i>. <br/>e.g: <u>customer(rand[1000-2000])@test.cz</u>
   
-> For random string you can use variable <strong>(rand[str1,str2,...])</strong>, which will be replaced with random value from given set. <br/>e.g: <u>(rand[John,David,Mark])</u>
+> For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>, which will be replaced with random value from given set. <br/>e.g: <u>(rand[John,David,Mark])</u>
 
 For more information check tooltips in config modal in <a href="https://www.sandbox.involvedigital.cz/dev-panel/demo" target="_blank">live demo</a>.
 
