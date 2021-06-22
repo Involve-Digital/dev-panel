@@ -57,24 +57,12 @@ class CacheCleaner extends Section {
   }
 
   save() {
-    store.addNotification({
-      title: "dev-panel",
-      message: "data saved successfully",
-      type: "success",
-      insert: "top",
-      container: "bottom-left",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeIn"],
-      dismiss: {
-        duration: 2000,
-        onScreen: true
-      }
-    });
-
     window.devPanel.cacheCleaner = JSON.parse(JSON.stringify(this.state.cacheCleaner));
     window.saveDevPanelData();
 
     this.toggleModal();
+
+    store.flashMessage('data saved successfully');
   }
 
   cleanCache() {

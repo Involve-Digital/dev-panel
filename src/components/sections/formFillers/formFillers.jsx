@@ -75,6 +75,13 @@ class FormFillers extends Section {
     this.setState({
       formFillers: formFillers
     });
+
+    window.devPanel.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
+    window.saveDevPanelData();
+
+    this.toggleTab(0);
+
+    store.flashMessage('form filler deleted successfully')
   }
 
   saveTitle(index, value) {
@@ -129,20 +136,6 @@ class FormFillers extends Section {
   }
 
   save() {
-    store.addNotification({
-      title: "dev-panel",
-      message: "data saved successfully",
-      type: "success",
-      insert: "top",
-      container: "bottom-left",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeIn"],
-      dismiss: {
-        duration: 2000,
-        onScreen: true
-      }
-    });
-
     for (var i = 0; i < this.state.formFillers.length; i++) {
       this.state.formFillers[i].values = this.state.formFillers[i].values.filter(value => value);
     }
@@ -151,6 +144,8 @@ class FormFillers extends Section {
     window.saveDevPanelData();
 
     this.toggleModal();
+
+    store.flashMessage('data saved successfully');
   }
 
   useFormFiller(formFiller) {
@@ -233,19 +228,7 @@ class FormFillers extends Section {
       }
     }
 
-    store.addNotification({
-      title: "dev-panel",
-      message: "form filler used: " + formFiller.title,
-      type: "info",
-      insert: "top",
-      container: "bottom-left",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeIn"],
-      dismiss: {
-        duration: 1500,
-        onScreen: true
-      }
-    });
+    store.flashMessage('form filler used: ' + formFiller.title);
   }
 
   handlePick(formFillerIndex, index, wholeForm) {
@@ -257,19 +240,7 @@ class FormFillers extends Section {
       duration = 5000;
     }
 
-    store.addNotification({
-      title: "dev-panel",
-      message: message,
-      type: "info",
-      insert: "top",
-      container: "bottom-left",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeIn"],
-      dismiss: {
-        duration: duration,
-        onScreen: true
-      }
-    });
+    store.flashMessage(message, 'info');
 
     const toggleDevPanel = this.props.toggle;
     const toggleModal = this.toggleModal;
@@ -302,7 +273,11 @@ class FormFillers extends Section {
         values[index].name = e.target.getAttribute('name');
         values[index].value = e.target.value;
       } else if (wholeForm === true) {
-        let formElements = e.target.form.elements;
+        let formElements = [];
+
+        if (e.target.form) {
+          formElements = e.target.form.elements;
+        }
 
         values.length = 0;
 
@@ -313,9 +288,20 @@ class FormFillers extends Section {
             continue;
           }
 
+          if (type === 'hidden' || type === 'submit' || formElements[i].tagName === 'BUTTON') {
+            continue;
+          }
+
+          let name = formElements[i].getAttribute('name')
+          let value = formElements[i].value;
+
+          if (!name) {
+            continue;
+          }
+
           values[i] = {};
-          values[i].name = formElements[i].getAttribute('name');
-          values[i].value = formElements[i].value;
+          values[i].name = name;
+          values[i].value = value;
         }
       } else {
         addRow(formFillerIndex);

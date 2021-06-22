@@ -57,9 +57,12 @@ class DevPanel extends Component {
 
   shouldBeEventStopped(e) {
     var focusedElement = document.activeElement.tagName;
-    var focusedElementIsInput = focusedElement === 'INPUT' || focusedElement === 'TEXTAREA' || focusedElement === 'SELECT';
 
-    return focusedElementIsInput || (!e.shiftKey && e.ctrlKey);
+    var focusedElementIsInput= focusedElement === 'INPUT'
+      || focusedElement === 'TEXTAREA'
+      || focusedElement === 'SELECT';
+
+    return focusedElementIsInput || !e.shiftKey || (e.shiftKey && e.ctrlKey);
   }
 }
 
