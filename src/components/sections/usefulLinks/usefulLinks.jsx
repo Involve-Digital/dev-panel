@@ -86,8 +86,6 @@ class UsefulLinks extends Section {
             })}
           </ul>
 
-          <hr className="iv-hr"/>
-
           <Settings buttons={[{icon: 'anchor', onClick: this.toggleModal}]}/>
         </div>
 

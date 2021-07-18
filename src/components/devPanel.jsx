@@ -26,7 +26,7 @@ class DevPanel extends Component {
   }
 
   handleQuickToggle(e) {
-    if (this.shouldBeEventStopped(e)) {
+    if (DevPanel.shouldBeEventStopped(e)) {
       return;
     }
 
@@ -55,7 +55,7 @@ class DevPanel extends Component {
     );
   }
 
-  shouldBeEventStopped(e) {
+  static shouldBeEventStopped(e) {
     var focusedElement = document.activeElement.tagName;
 
     var focusedElementIsInput= focusedElement === 'INPUT'

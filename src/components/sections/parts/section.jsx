@@ -46,13 +46,6 @@ class Section extends Component {
       isModalOpened: !this.state.isModalOpened
     });
   }
-
-  shouldBeEventStopped(e) {
-    var focusedElement = document.activeElement.tagName;
-    var focusedElementIsInput = focusedElement === 'INPUT' || focusedElement === 'TEXTAREA' || focusedElement === 'SELECT';
-
-    return focusedElementIsInput || (!e.shiftKey && e.ctrlKey);
-  }
 }
 
 export default Section;

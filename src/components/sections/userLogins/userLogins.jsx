@@ -2,6 +2,7 @@ import React from "react";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
+import DevPanel from "../../devPanel";
 import Section from "../parts/section";
 import Slat from "../parts/slat";
 import Settings from "../parts/settings";
@@ -37,7 +38,7 @@ class UserLogins extends Section {
   }
 
   handleQuickLogIn(e) {
-    if (this.shouldBeEventStopped(e)) {
+    if (DevPanel.shouldBeEventStopped(e)) {
       return;
     }
 
@@ -63,7 +64,7 @@ class UserLogins extends Section {
   }
 
   handleQuickLogOut(e) {
-    if (this.shouldBeEventStopped(e)) {
+    if (DevPanel.shouldBeEventStopped(e)) {
       return;
     }
 
@@ -188,10 +189,7 @@ class UserLogins extends Section {
                 Log-out
               </a>
             </li>
-
           </ul>
-
-          <hr className="iv-hr"/>
 
           <Shortcuts shortcuts={[
             {key: 'a', description: 'log-in as admin'},

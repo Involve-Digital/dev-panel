@@ -2,6 +2,7 @@ import React from "react";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
+import DevPanel from "../../devPanel";
 import Section from "../parts/section";
 import Slat from "../parts/slat";
 import Settings from "../parts/settings";
@@ -38,7 +39,7 @@ class FormFillers extends Section {
   }
 
   handleQuickFormFill(e) {
-    if (this.shouldBeEventStopped(e)) {
+    if (DevPanel.shouldBeEventStopped(e)) {
       return;
     }
 
@@ -342,8 +343,6 @@ class FormFillers extends Section {
               </a></li>
             })}
           </ul>
-
-          <hr className="iv-hr"/>
 
           <Shortcuts shortcuts={[{key: 'f', description: 'use default formfiller'}]}/>
 
