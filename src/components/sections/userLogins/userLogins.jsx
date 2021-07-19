@@ -18,7 +18,7 @@ class UserLogins extends Section {
   constructor(props) {
     super(props, 'user-logins');
 
-    this.state.userLogins = JSON.parse(JSON.stringify(window.devPanel.userLogins));
+    this.state.userLogins = JSON.parse(JSON.stringify(window.devPanel.data.userLogins));
 
     this.addRow = this.addRow.bind(this);
     this.saveRow = this.saveRow.bind(this);
@@ -42,7 +42,7 @@ class UserLogins extends Section {
       return;
     }
 
-    let logins = window.devPanel.userLogins.logins;
+    let logins = window.devPanel.data.userLogins.logins;
 
     if (e.code === 'KeyA') {
       for (let i = 0; i < logins.length; i++) {
@@ -129,8 +129,8 @@ class UserLogins extends Section {
   }
 
   save() {
-    window.devPanel.userLogins = JSON.parse(JSON.stringify(this.state.userLogins));
-    window.saveDevPanelData();
+    window.devPanel.data.userLogins = JSON.parse(JSON.stringify(this.state.userLogins));
+    window.devPanel.saveData();
 
     this.toggleModal();
 
@@ -138,7 +138,7 @@ class UserLogins extends Section {
   }
 
   logInAs(login) {
-    let logInLink = window.devPanel.userLogins.logInLink;
+    let logInLink = window.devPanel.data.userLogins.logInLink;
 
     let firstJoint = '?';
     if (logInLink.includes('?')) {
@@ -161,7 +161,7 @@ class UserLogins extends Section {
   }
 
   logOut() {
-    window.location.href = window.devPanel.userLogins.logOutLink;
+    window.location.href = window.devPanel.data.userLogins.logOutLink;
   }
 
   render() {
@@ -176,7 +176,7 @@ class UserLogins extends Section {
 
         <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
           <ul className="iv-list iv-list--links">
-            {window.devPanel.userLogins.logins.map((value, index) => {
+            {window.devPanel.data.userLogins.logins.map((value, index) => {
               return <li key={index}><a type="button" onClick={() => this.logInAs(value)}>
                 <FontAwesomeIcon icon={['fas', 'user-lock']}/>
                 {value.title}

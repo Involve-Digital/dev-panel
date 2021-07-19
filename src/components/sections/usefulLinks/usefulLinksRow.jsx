@@ -11,7 +11,8 @@ class UsefulLinksRow extends Component {
             className="iv-input"
             type="text"
             onChange={(e) => this.props.saveRow(this.props.index, 'title', e.target.value)}
-            value={this.props.title}/>
+            value={this.props.title}
+          />
         </td>
 
         <td>

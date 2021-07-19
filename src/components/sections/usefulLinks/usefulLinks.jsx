@@ -17,7 +17,7 @@ class UsefulLinks extends Section {
   constructor(props) {
     super(props, 'useful-links');
 
-    this.state.usefulLinks = JSON.parse(JSON.stringify(window.devPanel.usefulLinks));
+    this.state.usefulLinks = JSON.parse(JSON.stringify(window.devPanel.data.usefulLinks));
 
     this.saveRow = this.saveRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
@@ -58,8 +58,8 @@ class UsefulLinks extends Section {
   }
 
   save() {
-    window.devPanel.usefulLinks = JSON.parse(JSON.stringify(this.state.usefulLinks));
-    window.saveDevPanelData();
+    window.devPanel.data.usefulLinks = JSON.parse(JSON.stringify(this.state.usefulLinks));
+    window.devPanel.saveData();
 
     this.toggleModal();
 
@@ -78,7 +78,7 @@ class UsefulLinks extends Section {
 
         <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
           <ul className="iv-list iv-list--links">
-            {window.devPanel.usefulLinks.map((value, index) => {
+            {window.devPanel.data.usefulLinks.map((value, index) => {
               return <li key={index}><a type="button" href={value.link}>
                 <FontAwesomeIcon icon={['fas', 'external-link-alt']}/>
                 {value.title}

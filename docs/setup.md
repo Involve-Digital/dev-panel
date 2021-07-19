@@ -15,24 +15,24 @@ Below is basic implementation of dev-panel in nette application.
 <div id="dev-panel"></div>
 
 <script>
-  // load JSON and save it in global variable "window.devPanel"
+  // load JSON and save it in global variable "window.devPanel.data"
   var loadDevPanelData = function () {
     var request = new XMLHttpRequest();
     // {plink :Utils:Development:obtainDevPanelData} generates link to script that sends back dev-panel data JSON
     request.open('GET', {plink :Utils:Development:obtainDevPanelData}, false);
     request.onload = function () {
-      window.devPanel = JSON.parse(this.response);
+      window.devPanel.data = JSON.parse(this.response);
     };
     request.send();
   };
 
-  // define global function "window.saveDevPanelData" that dev-panel uses to save data
-  window.saveDevPanelData = function () {
+  // define global function "window.devPanel.save" that dev-panel uses to save data
+  window.devPanel.save = function () {
     var request = new XMLHttpRequest();
     // {plink :Utils:Development:saveDevPanelData} generates link to script that saves dev-panel data JSON
     // this request must be synchronous (third param - true)
     request.open('POST', {plink :Utils:Development:saveDevPanelData}, true);
-    request.send(JSON.stringify(window.devPanel));
+    request.send(JSON.stringify(window.devPanel.data));
   };
 
   loadDevPanelData();

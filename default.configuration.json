@@ -1,0 +1,15 @@
+{
+    "usefulLinks": [],
+    "formFillers": [],
+    "userLogins": {
+        "logInLink": "",
+        "logOutLink": "",
+        "adminRedirectLink": "",
+        "customerRedirectLink": "",
+        "logins": []
+    },
+    "cacheCleaner": {
+        "link": "",
+        "reload": true
+    }
+}

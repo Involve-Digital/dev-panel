@@ -17,7 +17,7 @@ class CacheCleaner extends Section {
   constructor(props) {
     super(props, 'cache-cleaner');
 
-    this.state.cacheCleaner = JSON.parse(JSON.stringify(window.devPanel.cacheCleaner));
+    this.state.cacheCleaner = JSON.parse(JSON.stringify(window.devPanel.data.cacheCleaner));
 
     this.save = this.save.bind(this);
 
@@ -58,8 +58,8 @@ class CacheCleaner extends Section {
   }
 
   save() {
-    window.devPanel.cacheCleaner = JSON.parse(JSON.stringify(this.state.cacheCleaner));
-    window.saveDevPanelData();
+    window.devPanel.data.cacheCleaner = JSON.parse(JSON.stringify(this.state.cacheCleaner));
+    window.devPanel.saveData();
 
     this.toggleModal();
 

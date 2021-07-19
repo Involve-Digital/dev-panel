@@ -19,7 +19,7 @@ class FormFillers extends Section {
   constructor(props) {
     super(props, 'form-fillers');
 
-    this.state.formFillers = JSON.parse(JSON.stringify(window.devPanel.formFillers));
+    this.state.formFillers = JSON.parse(JSON.stringify(window.devPanel.data.formFillers));
     this.state.tab = 0;
 
     this.addRow = this.addRow.bind(this);
@@ -43,7 +43,7 @@ class FormFillers extends Section {
       return;
     }
 
-    let formFillers = window.devPanel.formFillers;
+    let formFillers = window.devPanel.data.formFillers;
 
     if (e.code === 'KeyF') {
       for (let i = 0; i < formFillers.length; i++) {
@@ -77,8 +77,8 @@ class FormFillers extends Section {
       formFillers: formFillers
     });
 
-    window.devPanel.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
-    window.saveDevPanelData();
+    window.devPanel.data.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
+    window.devPanel.saveData();
 
     this.toggleTab(0);
 
@@ -141,8 +141,8 @@ class FormFillers extends Section {
       this.state.formFillers[i].values = this.state.formFillers[i].values.filter(value => value);
     }
 
-    window.devPanel.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
-    window.saveDevPanelData();
+    window.devPanel.data.formFillers = JSON.parse(JSON.stringify(this.state.formFillers));
+    window.devPanel.saveData();
 
     this.toggleModal();
 
@@ -336,7 +336,7 @@ class FormFillers extends Section {
 
         <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
           <ul className="iv-list iv-list--links">
-            {window.devPanel.formFillers.map((value, index) => {
+            {window.devPanel.data.formFillers.map((value, index) => {
               return <li key={index}><a type="button" onClick={() => this.useFormFiller(value)}>
                 <FontAwesomeIcon icon={['fas', 'pencil-alt']}/>
                 {value.title}
