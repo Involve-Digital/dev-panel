@@ -13,9 +13,13 @@ import 'animate.css/animate.min.css';
 
 library.add(fas);
 
-store.flashMessage = function (message, type) {
+store.flashMessage = function (message, type, duration) {
   if (typeof type === 'undefined') {
     type = 'success';
+  }
+
+  if (typeof duration === 'undefined') {
+    duration = 2000;
   }
 
   store.addNotification({
@@ -27,7 +31,7 @@ store.flashMessage = function (message, type) {
     animationIn: ["animate__animated", "animate__fadeIn"],
     animationOut: ["animate__animated", "animate__fadeIn"],
     dismiss: {
-      duration: 2000,
+      duration: duration,
       onScreen: true
     }
   });

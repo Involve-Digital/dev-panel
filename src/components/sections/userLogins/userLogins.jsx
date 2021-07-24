@@ -3,14 +3,14 @@ import React from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 import DevPanel from "../../devPanel";
-import Section from "../parts/section";
-import Slat from "../parts/slat";
-import Settings from "../parts/settings";
-import Modal from "../parts/modal";
-import SaveButton from "../parts/saveButton";
-import Tooltip from "../parts/tooltip";
+import Section from "../_parts/section";
+import Slat from "../_parts/slat";
+import Settings from "../_parts/settings";
+import Modal from "../_parts/modal";
+import SaveButton from "../_parts/saveButton";
+import Tooltip from "../_parts/tooltip";
 
-import Shortcuts from "../parts/shortcuts";
+import Shortcuts from "../_parts/shortcuts";
 import UserLoginsRow from "./userLoginsRow";
 import {store} from "react-notifications-component";
 
@@ -37,6 +37,18 @@ class UserLogins extends Section {
     window.addEventListener('keydown', this.handleQuickLogOut);
   }
 
+  shouldComponentUpdate() {
+    if (!window.devPanel.hasConfigurationJustChanged) {
+      return true;
+    }
+
+    if (!DevPanel.equals(this.state.userLogins, window.devPanel.data.userLogins)) {
+      this.state.userLogins = DevPanel.clone(window.devPanel.data.userLogins);
+    }
+
+    return true;
+  }
+
   handleQuickLogIn(e) {
     if (DevPanel.shouldBeEventStopped(e)) {
       return;
@@ -53,7 +65,7 @@ class UserLogins extends Section {
       }
     }
 
-    if (e.code === 'KeyK') {
+    if (e.code === 'KeyC') {
       for (let i = 0; i < logins.length; i++) {
         if (logins[i].customer) {
           this.logInAs(logins[i]);
@@ -193,7 +205,7 @@ class UserLogins extends Section {
 
           <Shortcuts shortcuts={[
             {key: 'a', description: 'log-in as admin'},
-            {key: 'k', description: 'log-in as customer'},
+            {key: 'c', description: 'log-in as customer'},
             {key: 'o', description: 'log-out'},
           ]}
           />

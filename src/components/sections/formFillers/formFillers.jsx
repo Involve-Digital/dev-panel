@@ -3,14 +3,14 @@ import React from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 import DevPanel from "../../devPanel";
-import Section from "../parts/section";
-import Slat from "../parts/slat";
-import Settings from "../parts/settings";
-import Modal from "../parts/modal";
-import SaveButton from "../parts/saveButton";
-import Tooltip from "../parts/tooltip";
+import Section from "../_parts/section";
+import Slat from "../_parts/slat";
+import Settings from "../_parts/settings";
+import Modal from "../_parts/modal";
+import SaveButton from "../_parts/saveButton";
+import Tooltip from "../_parts/tooltip";
 
-import Shortcuts from "../parts/shortcuts";
+import Shortcuts from "../_parts/shortcuts";
 
 import FormFillersRow from "./formFillersRow";
 import {store} from "react-notifications-component";
@@ -33,9 +33,19 @@ class FormFillers extends Section {
   }
 
   componentDidMount() {
-    super.componentDidMount();
-
     window.addEventListener('keydown', this.handleQuickFormFill);
+  }
+
+  shouldComponentUpdate() {
+    if (!window.devPanel.hasConfigurationJustChanged) {
+      return true;
+    }
+
+    if (!DevPanel.equals(this.state.formFillers, window.devPanel.data.formFillers)) {
+      this.state.formFillers = DevPanel.clone(window.devPanel.data.formFillers);
+    }
+
+    return true;
   }
 
   handleQuickFormFill(e) {
@@ -154,17 +164,22 @@ class FormFillers extends Section {
       let elements = document.getElementsByName(formFiller.values[i].name);
       let valueToFill = formFiller.values[i].value;
 
+      // (rand)
+      if (valueToFill && valueToFill.includes('(rand)')) {
+        let randNumber = Math.ceil(Math.random() * (9999 - 1) + 1);
+        valueToFill = valueToFill.replace(/\(rand\)/g, randNumber);
+      }
+
       // (rand[1-100])
       // (rand[Franta,Pepa,Vladimír])
-
-      if (valueToFill && valueToFill.includes('(rand')) {
+      if (valueToFill && valueToFill.includes('(rand') && !valueToFill.includes('(rand)')) {
         let start = valueToFill.indexOf('(rand');
         let count = (valueToFill.match(/\(rand/g) || []).length;
 
         let newValueToFill = valueToFill;
 
         for (let i = 1; i <= count; i++) {
-          let start = valueToFill.indexOf('(rand', start);
+          start = valueToFill.indexOf('(rand', start);
           let end = valueToFill.indexOf('])', start) + 2;
 
           let randVar = valueToFill.substring(start, end);
@@ -241,7 +256,7 @@ class FormFillers extends Section {
       duration = 5000;
     }
 
-    store.flashMessage(message, 'info');
+    store.flashMessage(message, 'info', duration);
 
     const toggleDevPanel = this.props.toggle;
     const toggleModal = this.toggleModal;
@@ -344,7 +359,7 @@ class FormFillers extends Section {
             })}
           </ul>
 
-          <Shortcuts shortcuts={[{key: 'f', description: 'use default formfiller'}]}/>
+          <Shortcuts shortcuts={[{key: 'f', description: 'use specified formfiller'}]}/>
 
           <hr className="iv-hr"/>
 

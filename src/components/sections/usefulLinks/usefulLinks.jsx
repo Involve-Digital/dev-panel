@@ -2,12 +2,13 @@ import React from "react";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
-import Section from "../parts/section";
-import Slat from "../parts/slat";
-import Settings from "../parts/settings";
-import Modal from "../parts/modal";
-import SaveButton from "../parts/saveButton";
-import Tooltip from "../parts/tooltip";
+import DevPanel from "../../devPanel";
+import Section from "../_parts/section";
+import Slat from "../_parts/slat";
+import Settings from "../_parts/settings";
+import Modal from "../_parts/modal";
+import SaveButton from "../_parts/saveButton";
+import Tooltip from "../_parts/tooltip";
 
 import UsefulLinksRow from "./usefulLinksRow";
 
@@ -17,11 +18,23 @@ class UsefulLinks extends Section {
   constructor(props) {
     super(props, 'useful-links');
 
-    this.state.usefulLinks = JSON.parse(JSON.stringify(window.devPanel.data.usefulLinks));
+    this.state.usefulLinks = DevPanel.clone(window.devPanel.data.usefulLinks);
 
     this.saveRow = this.saveRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.save = this.save.bind(this);
+  }
+
+  shouldComponentUpdate() {
+    if (!window.devPanel.hasConfigurationJustChanged) {
+      return true;
+    }
+
+    if (!DevPanel.equals(this.state.usefulLinks, window.devPanel.data.usefulLinks)) {
+      this.state.usefulLinks = DevPanel.clone(window.devPanel.data.usefulLinks);
+    }
+
+    return true;
   }
 
   addRow() {
@@ -58,7 +71,7 @@ class UsefulLinks extends Section {
   }
 
   save() {
-    window.devPanel.data.usefulLinks = JSON.parse(JSON.stringify(this.state.usefulLinks));
+    window.devPanel.data.usefulLinks = DevPanel.clone(this.state.usefulLinks);
     window.devPanel.saveData();
 
     this.toggleModal();
@@ -79,10 +92,12 @@ class UsefulLinks extends Section {
         <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
           <ul className="iv-list iv-list--links">
             {window.devPanel.data.usefulLinks.map((value, index) => {
-              return <li key={index}><a type="button" href={value.link}>
-                <FontAwesomeIcon icon={['fas', 'external-link-alt']}/>
-                {value.title}
-              </a></li>
+              return <li key={index}>
+                  <a type="button" href={value.link} target={value.newTab ? '_blank' : ''}>
+                    <FontAwesomeIcon icon={['fas', value.newTab ? 'external-link-alt' : 'arrow-circle-right']}/>
+                    {value.title}
+                  </a>
+              </li>
             })}
           </ul>
 
@@ -104,6 +119,7 @@ class UsefulLinks extends Section {
                       <Tooltip text="Name of destination; is displayed in dev-panel" />
                     </th>
                     <th>Link #</th>
+                    <th>New tab</th>
                     <th className="iv-control">Action</th>
                   </tr>
                 </thead>
@@ -115,6 +131,7 @@ class UsefulLinks extends Section {
                       index={index}
                       title={value.title}
                       link={value.link}
+                      newTab={value.newTab}
                       saveRow={this.saveRow}
                       deleteRow={this.deleteRow}
                     />

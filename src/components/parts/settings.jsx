@@ -6,9 +6,7 @@ import { store } from 'react-notifications-component';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 import DevPanel from "../devPanel";
-import Modal from "../sections/parts/modal";
-import SaveButton from "../sections/parts/saveButton";
-import {config} from "@fortawesome/fontawesome-svg-core";
+import Modal from "../sections/_parts/modal";
 
 class Settings extends Component {
   cookies = new Cookies();
@@ -23,23 +21,19 @@ class Settings extends Component {
       currentConfiguration: window.devPanel.getCurrentConfiguration()
     };
 
-    this.toggleNewConfigurationModal = this.toggleNewConfigurationModal.bind(this);
     this.toggleHelpModal = this.toggleHelpModal.bind(this);
 
     this.setCurrentConfiguration = this.setCurrentConfiguration.bind(this);
-    this.updateNewConfigurationName = this.updateNewConfigurationName.bind(this);
-    this.saveNewConfiguration = this.saveNewConfiguration.bind(this);
-    this.downloadConfiguration = this.downloadConfiguration.bind(this);
+    this.exportConfiguration = this.exportConfiguration.bind(this);
 
     this.handleToggleModalViaKeyboard = this.handleToggleModalViaKeyboard.bind(this);
     this.handleQuickConfigurationSwitch = this.handleQuickConfigurationSwitch.bind(this);
   }
 
-  toggleNewConfigurationModal() {
-    this.setState({
-      isNewConfigurationModalOpened: !this.state.isNewConfigurationModalOpened
-    });
-  };
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleToggleModalViaKeyboard);
+    window.addEventListener('keydown', this.handleQuickConfigurationSwitch);
+  }
 
   toggleHelpModal() {
     this.setState({
@@ -47,17 +41,7 @@ class Settings extends Component {
     });
   };
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleToggleModalViaKeyboard);
-    window.addEventListener('keydown', this.handleQuickConfigurationSwitch);
-
-  }
-
   handleToggleModalViaKeyboard(e) {
-    if (e.code === 'Escape' && this.state.isNewConfigurationModalOpened) {
-      this.toggleNewConfigurationModal();
-    }
-
     if (e.code === 'Escape' && this.state.isHelpModalOpened) {
       this.toggleHelpModal();
     }
@@ -97,34 +81,20 @@ class Settings extends Component {
   }
 
   setCurrentConfiguration(configuration) {
-    this.cookies.set('dev-panel-configuration', configuration);
+    DevPanel.cookies.set('dev-panel-configuration', configuration);
+
     this.state.currentConfiguration = configuration;
 
     window.devPanel.loadData(configuration);
 
+    window.devPanel.hasConfigurationJustChanged = true;
     this._reactInternalFiber._debugOwner.stateNode.forceUpdate();
+    window.devPanel.hasConfigurationJustChanged = false;
 
     store.flashMessage('Loaded configuration: ' + configuration);
   }
 
-  updateNewConfigurationName(newConfiguration) {
-    this.newConfiguration = newConfiguration;
-  }
-
-  saveNewConfiguration() {
-    let configuration = this.newConfiguration;
-
-    window.devPanel.addConfiguration(configuration);
-    window.devPanel.loadConfigurations();
-
-    this.toggleNewConfigurationModal();
-
-    store.flashMessage('Added new configuration: ' + configuration);
-
-    this.setCurrentConfiguration(configuration);
-  }
-
-  downloadConfiguration() {
+  exportConfiguration() {
     window.devPanel.exportConfiguration();
   }
 
@@ -139,32 +109,13 @@ class Settings extends Component {
             })}
           </select>
 
-          <FontAwesomeIcon icon={['fas', 'plus-circle']} onClick={this.toggleNewConfigurationModal}/>
-          <FontAwesomeIcon icon={['fas', 'download']} onClick={this.downloadConfiguration}/>
+          <FontAwesomeIcon icon={['fas', 'download']} onClick={this.exportConfiguration}/>
         </div>
 
         <div className="iv-help">
           <div>Help</div>
           <FontAwesomeIcon icon={['fas', 'question-circle']} onClick={this.toggleHelpModal}/>
         </div>
-
-        <Modal
-          opened={this.state.isNewConfigurationModalOpened}
-          close={this.toggleNewConfigurationModal}
-          width={500}
-          title="Add configuration"
-          content={
-            <>
-              <input
-                className="iv-input"
-                type="text"
-                onChange={(e) => this.updateNewConfigurationName(e.target.value)}
-              />
-              <hr className="iv-hr"/>
-              <SaveButton onClick={this.saveNewConfiguration}/>
-            </>
-          }
-        />
 
         <Modal
           opened={this.state.isHelpModalOpened}

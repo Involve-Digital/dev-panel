@@ -4,7 +4,6 @@ import UsefulLinks from "../sections/usefulLinks/usefulLinks";
 import FormFillers from "../sections/formFillers/formFillers";
 import UserLogins from "../sections/userLogins/userLogins";
 import CacheCleaner from "../sections/cacheCleaner/cacheCleaner";
-import Help from "../sections/help/help";
 import Settings from "./settings";
 
 class Body extends Component {

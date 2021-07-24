@@ -24,6 +24,15 @@ class UsefulLinksRow extends Component {
           />
         </td>
 
+        <td>
+          <input
+            className="iv-checkbox"
+            type="checkbox"
+            onChange={(e) => this.props.saveRow(this.props.index, 'newTab', e.target.checked)}
+            checked={this.props.newTab}
+          />
+        </td>
+
         <td className="iv-control">
           <div className="iv-control__alert" onClick={() => this.props.deleteRow(this.props.index)}>
             <FontAwesomeIcon icon={['fas', 'times']}/>

@@ -3,14 +3,14 @@ import React from "react";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 import DevPanel from "../../devPanel";
-import Section from "../parts/section";
-import Slat from "../parts/slat";
-import Settings from "../parts/settings";
-import Modal from "../parts/modal";
-import SaveButton from "../parts/saveButton";
-import Tooltip from "../parts/tooltip";
+import Section from "../_parts/section";
+import Slat from "../_parts/slat";
+import Settings from "../_parts/settings";
+import Modal from "../_parts/modal";
+import SaveButton from "../_parts/saveButton";
+import Tooltip from "../_parts/tooltip";
 
-import Shortcuts from "../parts/shortcuts";
+import Shortcuts from "../_parts/shortcuts";
 import {store} from "react-notifications-component";
 
 class CacheCleaner extends Section {
@@ -25,8 +25,19 @@ class CacheCleaner extends Section {
   }
 
   componentDidMount() {
-    super.componentDidMount();
     window.addEventListener('keydown', this.handleQuickCacheCleanup);
+  }
+
+  shouldComponentUpdate() {
+    if (!window.devPanel.hasConfigurationJustChanged) {
+      return true;
+    }
+
+    if (!DevPanel.equals(this.state.cacheCleaner, window.devPanel.data.cacheCleaner)) {
+      this.state.cacheCleaner = DevPanel.clone(window.devPanel.data.cacheCleaner);
+    }
+
+    return true;
   }
 
   handleQuickCacheCleanup(e) {
