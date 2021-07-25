@@ -72,7 +72,7 @@ class FormFillers extends Section {
 
   addFormFiller() {
     const formFillers = this.state.formFillers;
-    formFillers.push({title: '', values: [{name: '', value: ''}]});
+    formFillers.push({title: '', values: [{name: '', value: '', events: ['change']}]});
 
     this.setState({
       formFillers: formFillers
@@ -114,18 +114,38 @@ class FormFillers extends Section {
     });
   }
 
-  addRow(formFillerIndex) {
+  addRow(formFillerIndex, events) {
+    if (!events) {
+      events = ['change'];
+    }
+
     const formFillers = this.state.formFillers;
-    formFillers[formFillerIndex].values.push({title: '', link: ''});
+    formFillers[formFillerIndex].values.push({title: '', link: '', events: events});
 
     this.setState({
       formFillers: formFillers
     });
   }
 
-  saveRow(formFillerIndex, index, field, value) {
+  saveRow(formFillerIndex, index, field, value, add) {
     const formFillers = this.state.formFillers;
-    formFillers[formFillerIndex].values[index][field] = value;
+
+    if (field !== 'events') {
+      formFillers[formFillerIndex].values[index][field] = value;
+    } else {
+      const events = formFillers[formFillerIndex].values[index].events;
+
+      if (!events.includes(value) && add) {
+        events.push(value);
+      }
+
+      if (events.includes(value) && !add) {
+        const index = events.indexOf(value);
+        if (index > -1) {
+          events.splice(index, 1);
+        }
+      }
+    }
 
     this.setState({
       formFillers: formFillers
@@ -136,7 +156,7 @@ class FormFillers extends Section {
     const formFillers = this.state.formFillers;
 
     if (formFillers[formFillerIndex].values.length <= 1) {
-      formFillers[formFillerIndex].values[index] = {name: '', value: ''};
+      formFillers[formFillerIndex].values[index] = {name: '', value: '', events: ['change']};
     } else {
       formFillers[formFillerIndex].values.splice(index, 1);
     }
@@ -166,13 +186,17 @@ class FormFillers extends Section {
 
       // (rand)
       if (valueToFill && valueToFill.includes('(rand)')) {
-        let randNumber = Math.ceil(Math.random() * (9999 - 1) + 1);
-        valueToFill = valueToFill.replace(/\(rand\)/g, randNumber);
+        let count = (valueToFill.match(/\(rand\)/g) || []).length;
+
+        for (let i = 1; i <= count; i++) {
+          let randNumber = Math.ceil(Math.random() * (9999 - 1) + 1);
+          valueToFill = valueToFill.replace(/\(rand\)/, randNumber);
+        }
       }
 
       // (rand[1-100])
       // (rand[Franta,Pepa,Vladimír])
-      if (valueToFill && valueToFill.includes('(rand') && !valueToFill.includes('(rand)')) {
+      if (valueToFill && valueToFill.includes('(rand')) {
         let start = valueToFill.indexOf('(rand');
         let count = (valueToFill.match(/\(rand/g) || []).length;
 
@@ -214,19 +238,16 @@ class FormFillers extends Section {
 
       for (let i2 = 0; i2 < elements.length; i2++) {
         let type = elements[i2].getAttribute('type');
-        if (type === 'text' || type === 'password' || type === 'email' || type === 'tel') {
+        if (type === 'text' || type === 'number' || type === 'password' || type === 'email' || type === 'tel') {
           elements[i2].value = valueToFill;
-          continue;
         }
 
         if (type === 'checkbox' && !elements[i2].getAttribute('value')) {
           elements[i2].checked = true;
-          continue;
         }
 
         if ((type === 'checkbox' || type === 'radio') && elements[i2].getAttribute('value') === valueToFill) {
           elements[i2].checked = true;
-          continue;
         }
 
         if (elements[i2].tagName === 'SELECT') {
@@ -240,6 +261,28 @@ class FormFillers extends Section {
 
         if (elements[i2].tagName === 'TEXTAREA') {
           elements[i2].innerHTML = valueToFill;
+        }
+
+        let events = formFiller.values[i].events;
+
+        if (events.includes('change')) {
+          elements[i2].dispatchEvent(new Event('change'));
+        }
+
+        if (events.includes('input')) {
+          elements[i2].dispatchEvent(new Event('input'));
+        }
+
+        if (events.includes('click')) {
+          elements[i2].dispatchEvent(new Event('click'));
+        }
+
+        if (events.includes('keyup')) {
+          elements[i2].dispatchEvent(new KeyboardEvent('keyup'));
+        }
+
+        if (events.includes('paste')) {
+          elements[i2].dispatchEvent(new KeyboardEvent('paste'));
         }
       }
     }
@@ -318,9 +361,20 @@ class FormFillers extends Section {
           values[i] = {};
           values[i].name = name;
           values[i].value = value;
+          values[i].events = ['change'];
+
+          if (type === 'checkbox' || type === 'radio') {
+            values[i].events.push('click');
+          }
         }
       } else {
-        addRow(formFillerIndex);
+        let events = ['change'];
+
+        if (e.target.getAttribute('type') === 'checkbox' || e.target.getAttribute('type') === 'radio') {
+          events.push('click');
+        }
+
+        addRow(formFillerIndex, events);
 
         values[values.length - 1].name = e.target.getAttribute('name');
         values[values.length - 1].value = e.target.value;
@@ -369,7 +423,7 @@ class FormFillers extends Section {
         <Modal
           opened={this.state.isModalOpened}
           close={this.toggleModal}
-          width={500}
+          width={800}
           title="Form fillers"
           content={
             <>
@@ -473,8 +527,12 @@ class FormFillers extends Section {
                   <table className="iv-table">
                     <thead>
                       <tr>
-                        <th>Name(attribute)</th>
+                        <th>Name (HTML attribute)</th>
                         <th>Value to fill</th>
+                        <th>
+                          Events to trigger
+                          <Tooltip text="Events, that will be triggered on input upon filling form."/>
+                        </th>
                         <th className="iv-control">Actions</th>
                       </tr>
                     </thead>
@@ -487,6 +545,7 @@ class FormFillers extends Section {
                           index={rowIndex}
                           name={value.name}
                           value={value.value}
+                          events={value.events}
                           saveRow={this.saveRow}
                           deleteRow={this.deleteRow}
                           handlePick={this.handlePick}
@@ -494,13 +553,13 @@ class FormFillers extends Section {
                       })}
 
                       <tr>
-                        <td colSpan="2"></td>
+                        <td colSpan="3"></td>
                         <td className="iv-control">
-                          <div onClick={() => this.handlePick(index)}>
+                          <div onClick={() => this.handlePick(index)} data-tip="add row and pick input from page">
                             <FontAwesomeIcon icon={['fas', 'bullseye']}/>
                           </div>
 
-                          <div className="iv-control__success" onClick={() => this.addRow(index)}>
+                          <div className="iv-control__success" onClick={() => this.addRow(index)} data-tip="add row">
                             <FontAwesomeIcon icon={['fas', 'plus']}/>
                           </div>
                         </td>
