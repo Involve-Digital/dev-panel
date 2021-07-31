@@ -60,7 +60,7 @@ class UserLoginsRow extends Component {
         </td>
 
         <td className="iv-control">
-          <div className="iv-control__alert" onClick={() => this.props.deleteRow(this.props.index)}>
+          <div className="iv-control__alert" onClick={() => this.props.deleteRow(this.props.index)} data-tip="delete row">
             <FontAwesomeIcon icon={['fas', 'times']}/>
           </div>
         </td>

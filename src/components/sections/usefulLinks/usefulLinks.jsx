@@ -12,7 +12,8 @@ import Tooltip from "../_parts/tooltip";
 
 import UsefulLinksRow from "./usefulLinksRow";
 
-import { store } from 'react-notifications-component';
+import {store} from 'react-notifications-component';
+import ReactTooltip from "react-tooltip";
 
 class UsefulLinks extends Section {
   constructor(props) {
@@ -22,6 +23,8 @@ class UsefulLinks extends Section {
 
     this.saveRow = this.saveRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.moveUp = this.moveUp.bind(this);
+    this.moveDown = this.moveDown.bind(this);
     this.save = this.save.bind(this);
   }
 
@@ -37,8 +40,13 @@ class UsefulLinks extends Section {
     return true;
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    ReactTooltip.rebuild();
+  }
+
   addRow() {
     const usefulLinks = this.state.usefulLinks;
+
     usefulLinks.push({title: '', link: ''});
 
     this.setState({
@@ -70,6 +78,40 @@ class UsefulLinks extends Section {
     });
   }
 
+  moveUp(index) {
+    const usefulLinks = this.state.usefulLinks;
+
+    if (index === 0) {
+      return;
+    }
+
+    const previousUsefulLink = usefulLinks[index - 1];
+
+    usefulLinks[index - 1] = usefulLinks[index];
+    usefulLinks[index] = previousUsefulLink;
+
+    this.setState({
+      usefulLinks: usefulLinks
+    });
+  }
+
+  moveDown(index) {
+    const usefulLinks = this.state.usefulLinks;
+
+    if (index === usefulLinks.length - 1) {
+      return;
+    }
+
+    const nextUsefulLink = usefulLinks[index + 1];
+
+    usefulLinks[index + 1] = usefulLinks[index];
+    usefulLinks[index] = nextUsefulLink;
+
+    this.setState({
+      usefulLinks: usefulLinks
+    });
+  }
+
   save() {
     window.devPanel.data.usefulLinks = DevPanel.clone(this.state.usefulLinks);
     window.devPanel.saveData();
@@ -93,10 +135,10 @@ class UsefulLinks extends Section {
           <ul className="iv-list iv-list--links">
             {window.devPanel.data.usefulLinks.map((value, index) => {
               return <li key={index}>
-                  <a type="button" href={value.link} target={value.newTab ? '_blank' : ''}>
-                    <FontAwesomeIcon icon={['fas', value.newTab ? 'external-link-alt' : 'arrow-circle-right']}/>
-                    {value.title}
-                  </a>
+                <a type="button" href={value.link} target={value.newTab ? '_blank' : ''}>
+                  <FontAwesomeIcon icon={['fas', value.newTab ? 'external-link-alt' : 'arrow-circle-right']}/>
+                  {value.title}
+                </a>
               </li>
             })}
           </ul>
@@ -116,10 +158,11 @@ class UsefulLinks extends Section {
                   <tr>
                     <th>
                       Title
-                      <Tooltip text="Name of destination; is displayed in dev-panel" />
+                      <Tooltip text="Name of destination; is displayed in dev-panel"/>
                     </th>
                     <th>Link #</th>
                     <th>New tab</th>
+                    <th>Sort</th>
                     <th className="iv-control">Action</th>
                   </tr>
                 </thead>
@@ -134,13 +177,15 @@ class UsefulLinks extends Section {
                       newTab={value.newTab}
                       saveRow={this.saveRow}
                       deleteRow={this.deleteRow}
+                      moveUp={this.moveUp}
+                      moveDown={this.moveDown}
                     />
                   })}
 
                   <tr>
-                    <td colSpan="2"></td>
+                    <td colSpan="3"></td>
                     <td className="iv-control">
-                      <div className="iv-control__success" onClick={() => this.addRow()}>
+                      <div className="iv-control__success" onClick={() => this.addRow()} data-tip="add row">
                         <FontAwesomeIcon icon={['fas', 'plus']}/>
                       </div>
                     </td>

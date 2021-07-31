@@ -14,6 +14,7 @@ import Shortcuts from "../_parts/shortcuts";
 
 import FormFillersRow from "./formFillersRow";
 import {store} from "react-notifications-component";
+import ReactTooltip from "react-tooltip";
 
 class FormFillers extends Section {
   constructor(props) {
@@ -46,6 +47,10 @@ class FormFillers extends Section {
     }
 
     return true;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    ReactTooltip.rebuild();
   }
 
   handleQuickFormFill(e) {
@@ -308,6 +313,10 @@ class FormFillers extends Section {
 
     if (wholeForm !== true) {
       for (let i = 0; i < values.length; i++) {
+        if (!values[i]) {
+          continue;
+        }
+
         const inputs = document.querySelectorAll('[name="' + values[i].name + '"]');
 
         for (let i2 = 0; i2 < inputs.length; i2++) {
@@ -465,7 +474,8 @@ class FormFillers extends Section {
                         </th>
                         <th className="iv-control">
                           Action
-                          <Tooltip text='"Load entire form" button picks all inputs from form and adds them to form filler; "Delete" button deletes form filler'/>
+                          <Tooltip
+                            text='"Load entire form" button picks all inputs from form and adds them to form filler; "Delete" button deletes form filler'/>
                         </th>
                       </tr>
                     </thead>
@@ -491,7 +501,8 @@ class FormFillers extends Section {
                         </td>
 
                         <td className="iv-control">
-                          <button className="iv-button iv-button--success" onClick={() => this.handlePick(index, undefined, true)}>
+                          <button className="iv-button iv-button--success"
+                                  onClick={() => this.handlePick(index, undefined, true)}>
                             <FontAwesomeIcon icon={['fas', 'crosshairs']}/>
                             Load entire form
                           </button>
@@ -509,20 +520,23 @@ class FormFillers extends Section {
 
                   <div>
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
-                    You can pre fill your page form and then simply pick all the desired inputs via action buttons bellow, or all inputs of form via button above. Name and value will be filled automatically from page.
-                    <Tooltip text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
+                    You can pre fill your page form and then simply pick all the desired inputs via action buttons
+                    bellow, or all inputs of form via button above. Name and value will be filled automatically from
+                    page.
+                    <Tooltip
+                      text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
                   </div>
 
                   <hr className="iv-hr"/>
 
                   <div>
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
-                      For random number you can use variable <strong>(rand[min-max])</strong>
-                      <br />
-                      For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>
+                    For random number you can use variable <strong>(rand[min-max])</strong>
+                    <br/>
+                    For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>
                   </div>
 
-                  <hr className="iv-hr" />
+                  <hr className="iv-hr"/>
 
                   <table className="iv-table">
                     <thead>

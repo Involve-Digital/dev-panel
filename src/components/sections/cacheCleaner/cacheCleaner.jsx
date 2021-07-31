@@ -12,6 +12,7 @@ import Tooltip from "../_parts/tooltip";
 
 import Shortcuts from "../_parts/shortcuts";
 import {store} from "react-notifications-component";
+import ReactTooltip from "react-tooltip";
 
 class CacheCleaner extends Section {
   constructor(props) {
@@ -38,6 +39,10 @@ class CacheCleaner extends Section {
     }
 
     return true;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    ReactTooltip.rebuild();
   }
 
   handleQuickCacheCleanup(e) {
@@ -128,7 +133,8 @@ class CacheCleaner extends Section {
                   <tr>
                     <td>
                       Cache cleaner link
-                      <Tooltip text="Link that will be hit; Backend logic for cleaning temp / cache files is on specified URL"/>
+                      <Tooltip
+                        text="Link that will be hit; Backend logic for cleaning temp / cache files is on specified URL"/>
                     </td>
                     <td>
                       Reload page

@@ -13,6 +13,7 @@ import Tooltip from "../_parts/tooltip";
 import Shortcuts from "../_parts/shortcuts";
 import UserLoginsRow from "./userLoginsRow";
 import {store} from "react-notifications-component";
+import ReactTooltip from "react-tooltip";
 
 class UserLogins extends Section {
   constructor(props) {
@@ -47,6 +48,10 @@ class UserLogins extends Section {
     }
 
     return true;
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    ReactTooltip.rebuild();
   }
 
   handleQuickLogIn(e) {
@@ -227,11 +232,13 @@ class UserLogins extends Section {
                   <tr>
                     <th>
                       Log-in link
-                      <Tooltip text="Link to where you will be redirected while logging-in; Backend logic for log-in is on specified URL; username and password are passed as URL parameters"/>
+                      <Tooltip
+                        text="Link to where you will be redirected while logging-in; Backend logic for log-in is on specified URL; username and password are passed as URL parameters"/>
                     </th>
                     <th>
                       Log-out link
-                      <Tooltip text="Link to where you will be redirected while logging-out; Backend logic for log-out is on specified URL"/>
+                      <Tooltip
+                        text="Link to where you will be redirected while logging-out; Backend logic for log-out is on specified URL"/>
                     </th>
                   </tr>
                 </thead>
@@ -302,7 +309,7 @@ class UserLogins extends Section {
                   <tr>
                     <td colSpan="6"></td>
                     <td className="iv-control">
-                      <div className="iv-control__success">
+                      <div className="iv-control__success" data-tip="add row">
                         <FontAwesomeIcon
                           icon={['fas', 'plus']}
                           onClick={() => this.addRow()}
