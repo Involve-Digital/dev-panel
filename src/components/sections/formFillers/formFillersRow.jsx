@@ -29,7 +29,7 @@ class FormFillersRow extends Component {
           <table>
             <tbody>
               <tr>
-                <td>
+                <td className="iv-t-center">
                   <input
                     className="iv-checkbox"
                     type="checkbox"
@@ -40,7 +40,7 @@ class FormFillersRow extends Component {
                   <small>change</small>
                 </td>
 
-                <td>
+                <td className="iv-t-center">
                   <input
                     className="iv-checkbox"
                     type="checkbox"
@@ -51,7 +51,7 @@ class FormFillersRow extends Component {
                   <small>input</small>
                 </td>
 
-                <td>
+                <td className="iv-t-center">
                   <input
                     className="iv-checkbox"
                     type="checkbox"
@@ -62,7 +62,7 @@ class FormFillersRow extends Component {
                   <small>click</small>
                 </td>
 
-                <td>
+                <td className="iv-t-center">
                   <input
                     className="iv-checkbox"
                     type="checkbox"
@@ -73,7 +73,7 @@ class FormFillersRow extends Component {
                   <small>keyup</small>
                 </td>
 
-                <td>
+                <td className="iv-t-center">
                   <input
                     className="iv-checkbox"
                     type="checkbox"

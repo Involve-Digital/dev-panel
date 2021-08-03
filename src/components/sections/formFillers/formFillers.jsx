@@ -518,23 +518,23 @@ class FormFillers extends Section {
 
                   <hr className="iv-hr"/>
 
-                  <div>
+                  <p className="iv-p">
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
                     You can pre fill your page form and then simply pick all the desired inputs via action buttons
                     bellow, or all inputs of form via button above. Name and value will be filled automatically from
                     page.
                     <Tooltip
                       text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
-                  </div>
+                  </p>
 
                   <hr className="iv-hr"/>
 
-                  <div>
+                  <p className="iv-p">
                     <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
                     For random number you can use variable <strong>(rand[min-max])</strong>
                     <br/>
                     For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>
-                  </div>
+                  </p>
 
                   <hr className="iv-hr"/>
 

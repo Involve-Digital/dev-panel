@@ -100,21 +100,34 @@ class Settings extends Component {
 
   render() {
     return (
-      <div className="iv-panel__settings">
-        <div className="iv-configuration">
-          <div>Configuration</div>
-          <select value={this.state.currentConfiguration} onChange={(e) => this.setCurrentConfiguration(e.target.value)}>
+      <div className="iv-accordion">
+        <div className="iv-accordion__headline is--active">
+          <div className="iv-accordion__icon">
+            <FontAwesomeIcon icon={['fas', 'cogs']}/>
+          </div>   
+          Configuration       
+        </div>
+        <div className="iv-accordion__content opened">
+          <select class="iv-select iv-offset-bottom" value={this.state.currentConfiguration} onChange={(e) => this.setCurrentConfiguration(e.target.value)}>
             {window.devPanel.configurations.map((value) => {
               return <option value={value} key={value}>{value}</option>
             })}
-          </select>
-
-          <FontAwesomeIcon icon={['fas', 'download']} onClick={this.exportConfiguration}/>
-        </div>
-
-        <div className="iv-help">
-          <div>Help</div>
-          <FontAwesomeIcon icon={['fas', 'question-circle']} onClick={this.toggleHelpModal}/>
+          </select>          
+          <ul className="iv-list iv-list--links">
+            <li>
+              <a href="#" onClick={this.exportConfiguration}>
+                <FontAwesomeIcon icon={['fas', 'download']}/>          
+                Download configuration
+              </a>
+            </li>
+            <li>
+              <a href="#" onClick={this.toggleHelpModal}>
+                <FontAwesomeIcon icon={['fas', 'question-circle']} />
+                Help
+              </a>
+            </li>
+          </ul>
+          
         </div>
 
         <Modal
