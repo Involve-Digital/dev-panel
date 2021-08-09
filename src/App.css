@@ -686,3 +686,13 @@ hr.iv-hr {
     margin-right: 0.5rem;
     color: var(--yellow-color);
 }
+
+.iv-form-filler-events td {
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 13px;
+}
+
+.iv-form-filler-events .iv-checkbox {
+    margin: 0;
+}

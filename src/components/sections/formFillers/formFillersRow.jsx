@@ -26,7 +26,7 @@ class FormFillersRow extends Component {
         </td>
 
         <td>
-          <table>
+          <table className="iv-form-filler-events">
             <tbody>
               <tr>
                 <td className="iv-t-center">
@@ -44,17 +44,6 @@ class FormFillersRow extends Component {
                   <input
                     className="iv-checkbox"
                     type="checkbox"
-                    value="input"
-                    checked={this.props.events.includes('input')}
-                    onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
-                  />
-                  <small>input</small>
-                </td>
-
-                <td className="iv-t-center">
-                  <input
-                    className="iv-checkbox"
-                    type="checkbox"
                     value="click"
                     checked={this.props.events.includes('click')}
                     onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
@@ -66,11 +55,44 @@ class FormFillersRow extends Component {
                   <input
                     className="iv-checkbox"
                     type="checkbox"
+                    value="keydown"
+                    checked={this.props.events.includes('keydown')}
+                    onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
+                  />
+                  <small>keydown</small>
+                </td>
+
+                <td className="iv-t-center">
+                  <input
+                    className="iv-checkbox"
+                    type="checkbox"
                     value="keyup"
                     checked={this.props.events.includes('keyup')}
                     onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
                   />
                   <small>keyup</small>
+                </td>
+
+                <td className="iv-t-center">
+                  <input
+                    className="iv-checkbox"
+                    type="checkbox"
+                    value="keypress"
+                    checked={this.props.events.includes('keypress')}
+                    onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
+                  />
+                  <small>keypress</small>
+                </td>
+
+                <td className="iv-t-center">
+                  <input
+                    className="iv-checkbox"
+                    type="checkbox"
+                    value="input"
+                    checked={this.props.events.includes('input')}
+                    onChange={(e) => this.props.saveRow(this.props.formFillerIndex, this.props.index, 'events', e.target.value, e.target.checked)}
+                  />
+                  <small>input</small>
                 </td>
 
                 <td className="iv-t-center">

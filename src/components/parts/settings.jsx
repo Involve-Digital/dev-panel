@@ -1,16 +1,14 @@
 import React, {Component} from "react";
 
-import Cookies from 'universal-cookie';
-import { store } from 'react-notifications-component';
+import {store} from 'react-notifications-component';
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 import DevPanel from "../devPanel";
 import Modal from "../sections/_parts/modal";
+import Slat from "../sections/_parts/slat";
 
 class Settings extends Component {
-  cookies = new Cookies();
-
   constructor(props) {
     super(props);
 
@@ -18,9 +16,11 @@ class Settings extends Component {
       newConfigurationName: '',
       isNewConfigurationModalOpened: false,
       isHelpModalOpened: false,
-      currentConfiguration: window.devPanel.getCurrentConfiguration()
+      currentConfiguration: window.devPanel.getCurrentConfiguration(),
+      isOpened: DevPanel.cookies.get('dev-panel-settings-opened')
     };
 
+    this.toggle = this.toggle.bind(this);
     this.toggleHelpModal = this.toggleHelpModal.bind(this);
 
     this.setCurrentConfiguration = this.setCurrentConfiguration.bind(this);
@@ -33,6 +33,16 @@ class Settings extends Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleToggleModalViaKeyboard);
     window.addEventListener('keydown', this.handleQuickConfigurationSwitch);
+  }
+
+  toggle() {
+    const isOpened = !this.state.isOpened;
+
+    this.setState({
+      isOpened: isOpened
+    });
+
+    DevPanel.cookies.set('dev-panel-settings-opened', isOpened);
   }
 
   toggleHelpModal() {
@@ -101,33 +111,35 @@ class Settings extends Component {
   render() {
     return (
       <div className="iv-accordion">
-        <div className="iv-accordion__headline is--active">
-          <div className="iv-accordion__icon">
-            <FontAwesomeIcon icon={['fas', 'cogs']}/>
-          </div>   
-          Configuration       
-        </div>
-        <div className="iv-accordion__content opened">
-          <select class="iv-select iv-offset-bottom" value={this.state.currentConfiguration} onChange={(e) => this.setCurrentConfiguration(e.target.value)}>
+        <Slat
+          isOpened={this.state.isOpened}
+          toggle={this.toggle}
+          icon="cogs"
+          text="Configuration & help"
+        />
+
+        <div className={'iv-accordion__content' + (this.state.isOpened ? ' opened' : '')}>
+          <select className="iv-select iv-offset-bottom" value={this.state.currentConfiguration}
+                  onChange={(e) => this.setCurrentConfiguration(e.target.value)}>
             {window.devPanel.configurations.map((value) => {
               return <option value={value} key={value}>{value}</option>
             })}
-          </select>          
+          </select>
           <ul className="iv-list iv-list--links">
             <li>
               <a href="#" onClick={this.exportConfiguration}>
-                <FontAwesomeIcon icon={['fas', 'download']}/>          
-                Download configuration
+                <FontAwesomeIcon icon={['fas', 'download']}/>
+                Download current configuration
               </a>
             </li>
             <li>
               <a href="#" onClick={this.toggleHelpModal}>
-                <FontAwesomeIcon icon={['fas', 'question-circle']} />
+                <FontAwesomeIcon icon={['fas', 'question-circle']}/>
                 Help
               </a>
             </li>
           </ul>
-          
+
         </div>
 
         <Modal
@@ -151,9 +163,16 @@ class Settings extends Component {
                   Explanations:
                   <ol>
                     <li><b>Form filler title</b> - text, that will be shown on button</li>
-                    <li><b>Is default</b> - when selected, this allows you to use keyboard combo <b>shift + f</b> that will perform form filling action of selected form filler</li>
-                    <li><b>Crosshair icon</b> - this allows you to pick input right from the page, name and value will be filled automatically, this way you can prefile whole form and then just pick all the desired inputs</li>
-                    <li><b>Bullseye icon</b> - adds new row and then performs same as Crosshair icon, already picked inputs will be colored green</li>
+                    <li><b>Is default</b> - when selected, this allows you to use keyboard combo <b>shift + f</b> that
+                      will perform form filling action of selected form filler
+                    </li>
+                    <li><b>Crosshair icon</b> - this allows you to pick input right from the page, name and value will
+                      be filled automatically, this way you can prefile whole form and then just pick all the desired
+                      inputs
+                    </li>
+                    <li><b>Bullseye icon</b> - adds new row and then performs same as Crosshair icon, already picked
+                      inputs will be colored green
+                    </li>
                   </ol>
                 </li>
               </ul>
@@ -167,15 +186,23 @@ class Settings extends Component {
                   <ol>
                     <li><b>Log-in link</b> - link to script, that will handle log-ins</li>
                     <li><b>Log-out link</b> - link to script, that will handle log-out</li>
-                    <li><b>Admin redirect link</b> - link to where will you be redirected when logging as admin via keyboard combo <b>shift + a</b>, which user login will be used as admin login is determined by checkbox <b>ad.</b> in user login rows</li>
-                    <li><b>Customer redirect link</b> - link to where will you be redirected when logging as customer via keyboard combo <b>shift + k</b>, which user login will be used as admin login is determined by checkbox <b>cu.</b> in user login rows</li>
+                    <li><b>Admin redirect link</b> - link to where will you be redirected when logging as admin via
+                      keyboard combo <b>shift + a</b>, which user login will be used as admin login is determined by
+                      checkbox <b>ad.</b> in user login rows
+                    </li>
+                    <li><b>Customer redirect link</b> - link to where will you be redirected when logging as customer
+                      via keyboard combo <b>shift + k</b>, which user login will be used as admin login is determined by
+                      checkbox <b>cu.</b> in user login rows
+                    </li>
                   </ol>
                 </li>
               </ul>
 
               <h3>Temp / cache cleaner</h3>
               <ul className="iv-list">
-                <li>This is a simple tool, that allows you delete temporary files or cahce from your project without need to do it manually.</li>
+                <li>This is a simple tool, that allows you delete temporary files or cahce from your project without
+                  need to do it manually.
+                </li>
                 <li>Requires backend logic. Called via ajax request.</li>
                 <li>
                   Explanations:
