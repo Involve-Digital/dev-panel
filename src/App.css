@@ -22,7 +22,7 @@
 
 /***************************** GLOBALS *****************************/
 .iv-t-center {
-    text-align: center;
+    text-align: center !important;
 }
 
 .iv-tooltip {
@@ -95,6 +95,8 @@ hr.iv-hr {
     display: block;
     cursor: pointer;
     padding: 4px 10px;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 .iv-list > li > a:hover {
@@ -218,6 +220,7 @@ hr.iv-hr {
     text-align: right;
 }
 
+.iv-sort > div,
 .iv-control > div {
     width: 24px;
     height: 24px;
@@ -233,10 +236,12 @@ hr.iv-hr {
     opacity: 1;
 }
 
+.iv-sort > div:hover,
 .iv-control > div:hover {
     opacity: 0.6;
 }
 
+.iv-sort > div + div,
 .iv-control > div + div {
     margin-left: 6px;
 }
@@ -249,6 +254,11 @@ hr.iv-hr {
 .iv-control > div.iv-control__alert {
     color: var(--red-color);
     border-color: var(--red-color);
+}
+
+.iv-sort {
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 .iv-table {
@@ -272,7 +282,8 @@ hr.iv-hr {
 }
 
 .iv-input,
-.iv-checkbox {
+.iv-checkbox,
+.iv-select {
     overflow: hidden;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -303,6 +314,7 @@ hr.iv-hr {
     background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2214%22%20height%3D%2211%22%20viewBox%3D%220%200%2014%2011%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23fff%22%20points%3D%2212%201%205%207.5%202%205%201%205.5%205%2010%2013%201.5%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
 }
 
+.iv-select,
 .iv-input {
     display: block;
     border-radius: .625rem;
@@ -312,9 +324,18 @@ hr.iv-hr {
     width: 100%;
 }
 
+.iv-select:hover,
+.iv-select:focus,
 .iv-input:hover,
 .iv-input:focus {
     border-color: var(--dark-blue);
+}
+
+.iv-select {
+    padding-right: 20px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2224%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23666%22%20points%3D%2212%201%209%206%2015%206%22%20%2F%3E%0A%20%20%20%20%3Cpolygon%20fill%3D%22%23666%22%20points%3D%2212%2013%209%208%2015%208%22%20%2F%3E%0A%3C%2Fsvg%3E%0A");
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
 }
 
 /***************************** DEV PANEL *****************************/
@@ -325,15 +346,17 @@ hr.iv-hr {
     top: 0;    
     display: flex;
     flex-direction: column;
+    width: 300px;
+    height: 42px;
     z-index: 9999 !important;
     font-family: var(--global-font);
-    width: 300px;
     transition: var(--global-transition);
     box-sizing: border-box;
 }
 
 .iv-panel.is--open {
     left: 0;
+    height: 100%;
 }
 
 .iv-panel__header,
@@ -418,7 +441,6 @@ hr.iv-hr {
     background-color: var(--light-blue);
     border: 1px solid var(--medium-blue);
     border-radius: var(--global-radius);
-    overflow: hidden;
     transition: var(--global-transition);
 }
 
@@ -514,7 +536,7 @@ hr.iv-hr {
     transition: var(--global-transition);
     opacity: 0;
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     box-sizing: inherit;
 }
 
@@ -649,4 +671,28 @@ hr.iv-hr {
 
 .notification-container--bottom-left {
     position: fixed !important;
+}
+
+.iv-offset-bottom {
+    margin-bottom: 0.85rem;
+}
+
+.iv-p {
+    position: relative;
+    display: block;
+}
+
+.iv-p .fa-lightbulb {
+    margin-right: 0.5rem;
+    color: var(--yellow-color);
+}
+
+.iv-form-filler-events td {
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 13px;
+}
+
+.iv-form-filler-events .iv-checkbox {
+    margin: 0;
 }

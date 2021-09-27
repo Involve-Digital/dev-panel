@@ -183,7 +183,7 @@ class UsefulLinks extends Section {
                   })}
 
                   <tr>
-                    <td colSpan="3"></td>
+                    <td colSpan="4"></td>
                     <td className="iv-control">
                       <div className="iv-control__success" onClick={() => this.addRow()} data-tip="add row">
                         <FontAwesomeIcon icon={['fas', 'plus']}/>

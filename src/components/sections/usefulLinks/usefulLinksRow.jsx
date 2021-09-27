@@ -33,13 +33,15 @@ class UsefulLinksRow extends Component {
           />
         </td>
 
-        <td className="iv-control">
-          <div onClick={() => this.props.moveUp(this.props.index)} data-tip="move up">
-            <FontAwesomeIcon icon={['fas', 'arrow-up']}/>
-          </div>
+        <td>
+          <div className="iv-sort">
+            <div onClick={() => this.props.moveUp(this.props.index)} data-tip="move up">
+              <FontAwesomeIcon icon={['fas', 'arrow-up']}/>
+            </div>
 
-          <div onClick={() => this.props.moveDown(this.props.index)} data-tip="move down">
-            <FontAwesomeIcon icon={['fas', 'arrow-down']}/>
+            <div onClick={() => this.props.moveDown(this.props.index)} data-tip="move down">
+              <FontAwesomeIcon icon={['fas', 'arrow-down']}/>
+            </div>
           </div>
         </td>
 

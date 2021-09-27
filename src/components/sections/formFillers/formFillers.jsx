@@ -274,16 +274,24 @@ class FormFillers extends Section {
           elements[i2].dispatchEvent(new Event('change'));
         }
 
-        if (events.includes('input')) {
-          elements[i2].dispatchEvent(new Event('input'));
-        }
-
         if (events.includes('click')) {
           elements[i2].dispatchEvent(new Event('click'));
         }
 
+        if (events.includes('keydown')) {
+          elements[i2].dispatchEvent(new KeyboardEvent('keydown'));
+        }
+
         if (events.includes('keyup')) {
           elements[i2].dispatchEvent(new KeyboardEvent('keyup'));
+        }
+
+        if (events.includes('keypress')) {
+          elements[i2].dispatchEvent(new KeyboardEvent('keypress'));
+        }
+
+        if (events.includes('input')) {
+          elements[i2].dispatchEvent(new Event('input'));
         }
 
         if (events.includes('paste')) {
@@ -518,23 +526,45 @@ class FormFillers extends Section {
 
                   <hr className="iv-hr"/>
 
-                  <div>
-                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
-                    You can pre fill your page form and then simply pick all the desired inputs via action buttons
-                    bellow, or all inputs of form via button above. Name and value will be filled automatically from
-                    page.
-                    <Tooltip
-                      text='"Target" icon will let you pick desired input right from the page; "Bullseye" will add new form filler and let you pick desired input from page as well'/>
-                  </div>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <p className="iv-p">
+                              <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                            </p>
+                          </td>
+
+                          <td>
+                            You can pre fill your page form and then simply pick all the desired inputs via action buttons
+                            bellow, or all inputs of form via button above. Name and value will be filled automatically from
+                            page.
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
 
                   <hr className="iv-hr"/>
 
-                  <div>
-                    <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
-                    For random number you can use variable <strong>(rand[min-max])</strong>
-                    <br/>
-                    For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>
-                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <p className="iv-p">
+                            <FontAwesomeIcon icon={['fas', 'lightbulb']}/>
+                          </p>
+                        </td>
+
+                        <td>
+                            For random number from 1 to 9999 you can use variable <strong>(rand)</strong>.
+                            <br/>
+                            For random number you can use variable <strong>(rand[min-max])</strong>.
+                            <br/>
+                            For random value from set you can use variable <strong>(rand[val1,val2,...])</strong>.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
 
                   <hr className="iv-hr"/>
 
