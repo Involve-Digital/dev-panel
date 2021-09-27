@@ -14,6 +14,7 @@
     --dark-yellow: #8b572a;
     --red-color: #cd0000;
     --green-color: #1ca926;
+    --light-green-color: #bdffa3;
     --light-gray: #c6c6c6;
     --fw-light: 300;
     --fw-normal: 400;
@@ -662,7 +663,7 @@ hr.iv-hr {
 }
 
 .dev-panel-picked {
-    background-color: var(--green-color) !important;
+    background-color: var(--light-green-color) !important;
 }
 
 .notifications-component {
