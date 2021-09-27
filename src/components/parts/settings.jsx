@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import DevPanel from "../devPanel";
 import Modal from "../sections/_parts/modal";
 import Slat from "../sections/_parts/slat";
+import Shortcuts from "../sections/_parts/shortcuts";
 
 class Settings extends Component {
   constructor(props) {
@@ -140,6 +141,9 @@ class Settings extends Component {
             </li>
           </ul>
 
+          <Shortcuts shortcuts={[{key: 'q', description: 'quick config switch'}]}/>
+
+          <hr className="iv-hr"/>
         </div>
 
         <Modal

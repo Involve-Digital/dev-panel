@@ -575,7 +575,7 @@ class FormFillers extends Section {
                         <th>Value to fill</th>
                         <th>
                           Events to trigger
-                          <Tooltip text="Events, that will be triggered on input upon filling form."/>
+                          <Tooltip text="Events, that will be triggered on input upon filling it."/>
                         </th>
                         <th className="iv-control">Actions</th>
                       </tr>
